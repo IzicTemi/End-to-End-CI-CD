@@ -1,8 +1,15 @@
+- name: copying file with playbook
+  become: true 
+  copy:
+    src: ~/artifact.tar.gz
+    dest: ~/
+
 - name: "Unzip app"
   become: true
   unarchive:
     src: ~/artifact.tar.gz
     dest: ./
+    
 
 - name: "Start app"
   become: true
