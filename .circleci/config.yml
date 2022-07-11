@@ -222,7 +222,7 @@ jobs:
             if grep -q "No migrations are pending" ~/project/backend/migrations_dump.txt
             then
               echo "found"
-              curl https://kvdb.io/NtAr1vTnTZwzrmHnxnizyC/migration_${CIRCLE_WORKFLOW_ID:0:7} -d '1'
+              curl --insecure https://kvdb.io/NtAr1vTnTZwzrmHnxnizyC/migration_${CIRCLE_WORKFLOW_ID:0:7} -d '1'
             fi
       
       - destroy-environment
