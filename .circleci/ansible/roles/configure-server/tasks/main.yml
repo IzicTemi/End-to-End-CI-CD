@@ -1,3 +1,10 @@
+- name: "install python."
+  become: true
+  apt:
+    name: ["python3"]
+    state: latest
+    update_cache: yes
+
 - name: "upgrade packages."
   become: true
   apt:
