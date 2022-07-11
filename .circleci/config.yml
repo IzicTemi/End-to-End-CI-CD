@@ -15,6 +15,7 @@ commands:
           name: Destroy environments
           when: on_fail
           command: |
+            aws s3 rm "s3://udapeople-<< parameters.id >>" --recursive
             aws cloudformation delete-stack --stack-name udapeople-backend-<< parameters.id >>
             aws cloudformation delete-stack --stack-name udapeople-frontend-<< parameters.id >>
 
@@ -30,7 +31,7 @@ commands:
           when: on_fail
           command: |
             # Curl command here to see if there was a successful migration associated with the workflow id, store result in SUCCESS variable
-            SUCCESS = $(curl --insecure https://kvdb.io/NtAr1vTnTZwzrmHnxnizyC/migration_<< parameters.workflow_id >>)
+            SUCCESS=$(curl --insecure https://kvdb.io/NtAr1vTnTZwzrmHnxnizyC/migration_<< parameters.workflow_id >>)
             if(( $SUCCESS==1 )); 
             then
               cd ~/project/backend
@@ -204,6 +205,8 @@ jobs:
       - image: circleci/node:13.8.0
     steps:
       - checkout
+      - aws-cli/setup
+      - aws-cli/install
       - run:
           name: Run migrations
           command: |
