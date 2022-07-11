@@ -164,11 +164,17 @@ jobs:
               --filters "Name=tag:type,Values=back" \
               --output text >> .circleci/ansible/inventory.txt
 
+      - run: 
+          name: Add tar utility to image
+          commands: |
+            sudo yum install tar
+             
       - persist_to_workspace:
           root: ~/
           paths:
             - project/.circleci/ansible/inventory.txt
-      # Here's where you will add some code to rollback on failure      
+
+      - destroy-environment    
 
 
 
