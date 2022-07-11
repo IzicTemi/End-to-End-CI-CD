@@ -166,7 +166,7 @@ jobs:
 
       - run: 
           name: Add tar utility to image
-          commands: |
+          command: |
             sudo yum install tar
              
       - persist_to_workspace:
