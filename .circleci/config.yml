@@ -206,7 +206,6 @@ jobs:
     steps:
       - checkout
       - aws-cli/setup
-      - aws-cli/install
       - run:
           name: Run migrations
           command: |
@@ -230,6 +229,10 @@ jobs:
       - image: amazon/aws-cli
     steps:
       - checkout
+      - run:
+          name: Install tar and gzip utility
+          command: |
+            yum install -y tar gzip
       - attach_workspace:
           at: ~/
       - run:
@@ -241,11 +244,6 @@ jobs:
           name: Install python
           command: |
             yum install -y python3
-
-      - run:
-          name: Install tar and gzip utility
-          command: |
-            yum install -y tar gzip
             
       - run:
           name: Get backend url
@@ -273,7 +271,6 @@ jobs:
     steps:
       - checkout
       - aws-cli/setup
-      - aws-cli/install
       - add_ssh_keys:
           fingerprints: ["cb:c1:3e:2a:48:69:34:3e:5d:34:b1:67:b4:11:de:6c"]
       - attach_workspace:
@@ -328,8 +325,8 @@ workflows:
           requires: [deploy-infrastructure]
       - run-migrations:
           requires: [configure-infrastructure]
-      - deploy-frontend:
-          requires: [run-migrations]
+      # - deploy-frontend:
+      #     requires: [run-migrations]
       - deploy-backend:
           requires: [run-migrations]
       # - smoke-test:
