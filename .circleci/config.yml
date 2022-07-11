@@ -219,7 +219,7 @@ jobs:
           name: Send migration results to kvdb
           command: |
             cat ~/project/backend/migrations_dump.txt
-            if grep -q "has been executed successfully." ~/project/backend/migrations_dump.txt
+            if grep -q "No migrations are pending" ~/project/backend/migrations_dump.txt
             then
               echo "found"
               curl https://kvdb.io/NtAr1vTnTZwzrmHnxnizyC/migration_${CIRCLE_WORKFLOW_ID:0:7} -d '1'
@@ -230,24 +230,20 @@ jobs:
 
   deploy-frontend:
     docker:
-      - image: amazon/aws-cli
+      - image: python:3.7-alpine3.11
     steps:
       - checkout
+      - aws-cli/setup
       - run:
           name: Install tar and gzip utility
           command: |
-            yum install -y tar gzip
+            apk add gzip tar
       - attach_workspace:
           at: ~/
       - run:
           name: Install node and dependencies
           command: |
-            yum install -y node npm
-
-      - run:
-          name: Install python
-          command: |
-            yum install -y python3
+            apk add nodejs npm
             
       - run:
           name: Get backend url
