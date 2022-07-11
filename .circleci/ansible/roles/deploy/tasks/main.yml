@@ -1,7 +1,7 @@
 - name: "Unzip app"
   become: true
   unarchive:
-    src: artifact.tar.gz
+    src: ~/artifact.tar.gz
     dest: ./
 
 - name: "Start app"
