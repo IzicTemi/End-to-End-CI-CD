@@ -323,7 +323,7 @@ jobs:
       - run:
           name: Install dependencies
           command: |
-            apk add nodejs npm curl
+            apk add nodejs npm curl gzip tar
       - run:
           name: Get backend url
           command: |
@@ -359,20 +359,21 @@ jobs:
     
   cloudfront-update:
     docker:
-      - image: amazon/aws-cli
+      - image: alpine:latest 
     steps:
-      - checkout  
-      - run: yum install epel-release
+      - checkout
+      - aws-cli/setup
       - run:
           name: "Install dependencies"
-          command: yum install -y npm nodejs tar gzip
+          command: apk add nodejs npm curl tar gzip
       - run:
           name: Save Old Workflow-ID
           command: |
             export OldWorkflowID=$(aws cloudformation \
             list-exports --query "Exports[?Name==\`WorkflowID\`].Value" \
             --no-paginate --output text)
-            echo OldWorkflowID: "${OldWorkflowID}" > id.txt
+            echo OldWorkflowID: "${OldWorkflowID}" 
+            echo "${OldWorkflowID}" > id.txt
       - persist_to_workspace:
           root: ~/
           paths:
@@ -391,13 +392,13 @@ jobs:
   
   cleanup:
     docker:
-      - image: amazon/aws-cli
+      - image: alpine:latest 
     steps:
       - checkout
-      - run: yum install epel-release
+      - aws-cli/setup
       - run:
           name: "Install dependencies"
-          command: yum install -y npm nodejs tar gzip
+          command: apk add nodejs npm curl tar gzip
       - attach_workspace:
           at: ~/
       - run:
