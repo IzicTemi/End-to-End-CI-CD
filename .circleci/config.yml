@@ -362,6 +362,10 @@ jobs:
       - image: amazon/aws-cli
     steps:
       - checkout  
+      - run: yum install epel-release
+      - run:
+          name: "Install dependencies"
+          command: yum install -y npm nodejs tar gzip
       - run:
           name: Save Old Workflow-ID
           command: |
@@ -393,7 +397,7 @@ jobs:
       - run: yum install epel-release
       - run:
           name: "Install dependencies"
-          command: yum install -y npm nodejs
+          command: yum install -y npm nodejs tar gzip
       - attach_workspace:
           at: ~/
       - run:
