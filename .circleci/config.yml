@@ -202,6 +202,12 @@ jobs:
           command: |
             cd .circleci/ansible
             ansible-playbook -i inventory.txt configure-server.yml 
+      - run:
+          name: Setup Prometheus Node Exporter
+          command: |
+            cd .circleci/ansible
+            cat inventory.txt
+            ansible-playbook -i inventory.txt node-exporter.yml
 
       - destroy-environment 
 
@@ -355,7 +361,18 @@ jobs:
     docker:
       - image: amazon/aws-cli
     steps:
-      - checkout            
+      - checkout  
+      - run:
+          name: Save Old Workflow-ID
+          command: |
+            export OldWorkflowID=$(aws cloudformation \
+            list-exports --query "Exports[?Name==\`WorkflowID\`].Value" \
+            --no-paginate --output text)
+            echo OldWorkflowID: "${OldWorkflowID}" > id.txt
+      - persist_to_workspace:
+          root: ~/
+          paths:
+            - project/id.txt        
       - run:
           name: Update cloudfront distribution
           command: |
@@ -373,19 +390,16 @@ jobs:
       - image: amazon/aws-cli
     steps:
       - checkout
+      - run: yum install epel-release
+      - run:
+          name: "Install dependencies"
+          command: yum install -y npm nodejs
+      - attach_workspace:
+          at: ~/
       - run:
           name: Get old stack workflow id
-          command: |
-            # Fetch the Old workflow ID
-            export OldWorkflowID=$(aws cloudformation \
-            list-exports --query "Exports[?Name==\`WorkflowID\`].Value" \
-            --no-paginate --output text)
-            echo OldWorkflowID: "${OldWorkflowID}"
-            echo CIRCLE_WORKFLOW_ID: "${CIRCLE_WORKFLOW_ID:0:7}"
-            # Fetch the stack names          
-            export STACKS=($(aws cloudformation list-stacks --query "StackSummaries[*].StackName" \
-            --stack-status-filter CREATE_COMPLETE --no-paginate --output text)) 
-            echo Stack names: "${STACKS[@]}"  
+          command: export OldWorkflowID=$(cat id.txt)
+            
       - run:
           name: Remove old stacks and files
           command: |
@@ -394,6 +408,9 @@ jobs:
               aws s3 rm "s3://udapeople-${OldWorkflowID}" --recursive
               aws cloudformation delete-stack --stack-name "udapeople-backend-${OldWorkflowID}"
               aws cloudformation delete-stack --stack-name "udapeople-frontend-${OldWorkflowID}"
+              echo ------------ cleaned up old stacks --------------
+            else
+              echo ------------ no stacks to cleanup --------------
             fi
 
       - destroy-environment
