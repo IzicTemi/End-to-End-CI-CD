@@ -216,8 +216,7 @@ jobs:
           name: Run migrations
           command: |
             cd backend
-            npm install
-            # Run and save the migration output
+            npm run migrations:revert
             npm run migrations > migrations_dump.txt
       - run:
           name: Send migration results to kvdb
@@ -328,7 +327,7 @@ jobs:
             export BACKEND_IP=$(aws ec2 describe-instances --query 'Reservations[*].Instances[*].PublicIpAddress' --filters "Name=tag:Name,Values=backend-${CIRCLE_WORKFLOW_ID:0:7}" --output text)
             export API_URL="http://${BACKEND_IP}:3030"
             echo "${API_URL}"
-            curl "${API_URL}/api/status"
+            # curl "${API_URL}/api/status"
             # if curl "${API_URL}/api/status" | grep "ok"
             if curl www.google.com | grep "ok"
             then
