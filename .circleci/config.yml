@@ -36,7 +36,7 @@ commands:
             then
               cd ~/project/backend
               npm install
-              npm run premigrations:revert
+              npm run migrations:revert
             fi
             
 jobs:
@@ -168,6 +168,8 @@ jobs:
               --query 'Reservations[*].Instances[*].PublicIpAddress' \
               --filters "Name=tag:type,Values=back" \
               --output text >> .circleci/ansible/inventory.txt
+            
+            cat .circleci/ansible/inventory.txt
 
       - run: 
           name: Add tar utility to image
@@ -208,6 +210,8 @@ jobs:
     steps:
       - checkout
       - aws-cli/setup
+      - restore_cache:
+          keys: [backend-build]
       - run:
           name: Run migrations
           command: |
@@ -218,11 +222,11 @@ jobs:
       - run:
           name: Send migration results to kvdb
           command: |
-            # cat ~/project/backend/migrations_dump.txt
+            cat ~/project/backend/migrations_dump.txt
             if grep -q "No migrations are pending" ~/project/backend/migrations_dump.txt || grep -q "has been executed successfully." ~/project/backend/migrations_dump.txt
             then
               echo "found"
-              curl --insecure https://kvdb.io/NtAr1vTnTZwzrmHnxnizyC/migration_${CIRCLE_WORKFLOW_ID:0:7} -d '1'
+              curl -k https://kvdb.io/NtAr1vTnTZwzrmHnxnizyC/migration_${CIRCLE_WORKFLOW_ID:0:7} -d '1'
             fi
       
       - destroy-environment
@@ -253,6 +257,7 @@ jobs:
             echo "API_URL = ${API_URL}"
             echo API_URL="http://${BACKEND_IP}:3030" >> frontend/.env
             cat frontend/.env
+
       - run:
           name: Deploy frontend objects
           command: |
@@ -312,7 +317,7 @@ jobs:
       - run:
           name: Install dependencies
           command: |
-            apk add nodejs npm
+            apk add nodejs npm curl
       - run:
           name: Get backend url
           command: |
@@ -323,6 +328,7 @@ jobs:
             export BACKEND_IP=$(aws ec2 describe-instances --query 'Reservations[*].Instances[*].PublicIpAddress' --filters "Name=tag:type,Values=back" --output text)
             export API_URL="http://${BACKEND_IP}:3030"
             echo "${API_URL}"
+            curl "${API_URL}/api/status"
             # if curl "${API_URL}/api/status" | grep "ok"
             if curl www.google.com | grep "ok"
             then
