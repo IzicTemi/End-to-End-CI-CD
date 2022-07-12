@@ -36,7 +36,7 @@ commands:
             then
               cd ~/project/backend
               npm install
-              npm run migration:revert
+              npm run premigrations:revert
             fi
             
 jobs:
@@ -323,7 +323,8 @@ jobs:
             export BACKEND_IP=$(aws ec2 describe-instances --query 'Reservations[*].Instances[*].PublicIpAddress' --filters "Name=tag:type,Values=back" --output text)
             export API_URL="http://${BACKEND_IP}:3030"
             echo "${API_URL}"
-            if curl "${API_URL}/api/status" | grep "ok"
+            # if curl "${API_URL}/api/status" | grep "ok"
+            if curl www.google.com | grep "ok"
             then
                 return 0
             else
