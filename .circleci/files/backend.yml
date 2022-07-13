@@ -47,8 +47,9 @@ Resources:
       Tags:
         - Key: Name
           Value: !Sub backend-${ID}
-  ElasticIP:
+  ElasticIPAssociation:
     Type: AWS::EC2::EIPAssociation
     Properties:
-      EIP: '34.204.217.115'
+      AllocationId: 'eipalloc-091d536c8d9b581db'
+      # EIP: '34.204.217.115'
       InstanceId: !Ref EC2Instance
