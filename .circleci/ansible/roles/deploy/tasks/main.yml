@@ -36,7 +36,7 @@
   become: true
   command: pm2 start -f ./main.js
   args:
-    chdir: ~/dist
+    chdir: /home/ubuntu/dist
   environment:
     ENVIRONMENT: production
     TYPEORM_CONNECTION: "{{ lookup('env', 'TYPEORM_CONNECTION')}}"
