@@ -18,8 +18,8 @@
     npm install
     npm build
     pm2 stop default
-    npm run start:prod
-    # pm2 start npm -- start
+    # npm run start:prod
+    pm2 start npm -- start
   environment:
     ENVIRONMENT: production
     TYPEORM_CONNECTION: "{{ lookup('env', 'TYPEORM_CONNECTION')}}"
