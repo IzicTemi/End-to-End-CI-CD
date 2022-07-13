@@ -1,8 +1,8 @@
 ---
 
 - name: "configuration play." 
-  hosts: web
-  user: ubuntu
+  hosts: localhost
+  user: thresh
   become: true
   become_method: sudo
   become_user: root  
@@ -26,16 +26,26 @@
 
   # Get the environment variables from CircleCI and add to the EC2 instance
   environment:
-    ENVIRONMENT: production
-    TYPEORM_CONNECTION: "{{ lookup('env', 'TYPEORM_CONNECTION')}}"
-    TYPEORM_ENTITIES: "{{ lookup('env', 'TYPEORM_ENTITIES')}}"
-    TYPEORM_HOST: "{{ lookup('env', 'TYPEORM_HOST')}}"
-    TYPEORM_PORT: 5432
-    TYPEORM_USERNAME: "{{ lookup('env', 'TYPEORM_USERNAME')}}"
-    TYPEORM_PASSWORD: "{{ lookup('env', 'TYPEORM_PASSWORD')}}"
-    TYPEORM_DATABASE: "{{ lookup('env', 'TYPEORM_DATABASE')}}"
-    TYPEORM_MIGRATIONS: "{{ lookup('env', 'TYPEORM_MIGRATIONS')}}"
-    TYPEORM_MIGRATIONS_DIR: "{{ lookup('env', 'TYPEORM_MIGRATIONS_DIR')}}"
+    - key: ENVIRONMENT
+      value: production
+    - key: TYPEORM_CONNECTION
+      value: "{{ lookup('env', 'TYPEORM_CONNECTION')}}"
+    - key: TYPEORM_ENTITIES
+      value: "{{ lookup('env', 'TYPEORM_ENTITIES')}}"
+    - key: TYPEORM_HOST
+      value: "{{ lookup('env', 'TYPEORM_HOST')}}"
+    - key: TYPEORM_PORT
+      value : 5432
+    - key: TYPEORM_USERNAME
+      value: "{{ lookup('env', 'TYPEORM_USERNAME')}}"
+    - key: TYPEORM_PASSWORD
+      value: "{{ lookup('env', 'TYPEORM_PASSWORD')}}"
+    - key: TYPEORM_DATABASE
+      value: "{{ lookup('env', 'TYPEORM_DATABASE')}}"
+    - key: TYPEORM_MIGRATIONS
+      value: "{{ lookup('env', 'TYPEORM_MIGRATIONS')}}"
+    - key: TYPEORM_MIGRATIONS_DIR
+      value: "{{ lookup('env', 'TYPEORM_MIGRATIONS_DIR')}}"
 
   roles:
     - configure-server
