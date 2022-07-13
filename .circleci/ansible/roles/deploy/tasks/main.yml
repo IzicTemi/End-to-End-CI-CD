@@ -17,7 +17,7 @@
   shell: |
     npm install
     npm build
-    pm2 delete all
+    # pm2 delete all
     # npm run start:prod
     # pm2 start npm -- start
   environment:
