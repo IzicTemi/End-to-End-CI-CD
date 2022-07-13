@@ -223,7 +223,7 @@ jobs:
           name: Run migrations
           command: |
             cd backend
-            npm run migrations:revert
+            # npm run migrations:revert
             npm run migrations > migrations_dump.txt
       - run:
           name: Send migration results to kvdb
@@ -335,8 +335,8 @@ jobs:
             export API_URL="http://${BACKEND_IP}:3030"
             echo "${API_URL}"
             # curl "${API_URL}/api/status"
-            # if curl "${API_URL}/api/status" | grep "ok"
-            if curl www.google.com | grep "ok"
+            if curl "${API_URL}/api/status" | grep "ok"
+            # if curl www.google.com | grep "ok"
             then
                 return 0
             else
