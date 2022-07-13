@@ -18,7 +18,7 @@
     npm install
     npm build
     pm2 stop default
-    npm run start:prod
+    # npm run start:prod
     # pm2 start npm -- start
   environment:
     ENVIRONMENT: production
@@ -40,7 +40,7 @@
   environment:
     ENVIRONMENT: production
     TYPEORM_CONNECTION: "{{ lookup('env', 'TYPEORM_CONNECTION')}}"
-    TYPEORM_ENTITIES: "{{ lookup('env', 'TYPEORM_ENTITIES')}}"
+    TYPEORM_ENTITIES: "./modules/domain/**/*.entity.js"
     TYPEORM_HOST: "{{ lookup('env', 'TYPEORM_HOST')}}"
     TYPEORM_PORT: 5432
     TYPEORM_USERNAME: "{{ lookup('env', 'TYPEORM_USERNAME')}}"
