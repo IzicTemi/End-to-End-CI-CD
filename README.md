@@ -7,7 +7,7 @@ In this project, I aim to accomplist the following objectives:
 - Utilize a configuration management tool to accomplish deployment to cloud-based servers.
 - Surface critical server errors for diagnosis using centralized structured logging.
 
-![Diagram of CI/CD Pipeline](udapeople.png)
+![Diagram of CI/CD Pipeline](udapeople-pipeline.png)
 
 ### Instructions
 
