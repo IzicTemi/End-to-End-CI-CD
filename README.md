@@ -1,8 +1,7 @@
 # Give an Application Auto-Deploy Superpowers
 
-In this project, I was given a starter code for a fictional company 'UdaPeople' - a revolutionary concept in Human Resources which promises to help small businesses care better for their most valuable resource: their people. The project aims to develop a CI/CD pipeline, complete with monitoring and logging to deploy the stack. I aim to accomplist the following objectives:
+In this project, I was given a starter code for a fictional company 'UdaPeople' - a revolutionary concept in Human Resources which promises to help small businesses care better for their most valuable resource: their people. The project aims to develop a CI/CD pipeline; complete with monitoring and logging to automate deploying the stack. I aim to accomplist the following objectives:
 
-- Explain the fundamentals and benefits of CI/CD to achieve, build, and deploy automation for cloud-based software products.
 - Utilize Deployment Strategies to design and build CI/CD pipelines that support Continuous Delivery processes.
 - Utilize a configuration management tool to accomplish deployment to cloud-based servers.
 - Surface critical server errors for diagnosis using centralized structured logging.
@@ -46,12 +45,12 @@ This is a "mono-repository" which means multiple servers or layers exist in the 
 
 #### 1. Install dependencies in both `frontend` and `backend` folders.
 
-From your `cdond-cd-projectstarter` folder, use the commands:
+From your base folder, use the commands:
 ```bash
 cd frontend
 npm i
 ```
-From your `cdond-cd-projectstarter` folder, use the commands:
+From your base folder, use the commands:
 ```bash
 cd backend
 npm i
@@ -59,7 +58,7 @@ npm i
 
 #### 2. Create `.env` file for database connection info.
 
-Add a `.env` file to your `backend` folder with the following contents:
+Add a `.env` file to the `backend` folder with the following contents:
 
 ```bash
 NODE_ENV=local
@@ -83,7 +82,7 @@ You can use your own Postgres server if you wish or you can use the Docker-Compo
 
 For convenience, a template that you can use to easily run a Postgres database for local testing. To run this template, you'll need to install Docker and Docker-Compose.
 
-To start the database, you will use the following commands from your `base` folder:
+To start the database, you will use the following commands from your base folder:
 ```bash
 cd util
 docker-compose up
@@ -91,7 +90,7 @@ docker-compose up
 
 ## Compiling the Code
 
-You can compile the code from your `base` folder using the following:
+You can compile the code from your base folder using the following:
 ```bash
 cd frontend
 npm run build
@@ -108,11 +107,11 @@ Most of the tasks needed to build, test and deploy the application are simplifie
 
 | Name | Purpose | Notes | 
 | :-- | :-- | :-- |
-| migrations | Run migration which checks for any migration scripts that have not yet been applied to the db and runs them. |Make sure you have a Postgres database running and your `.env` file is configured correctly. If you get connection errors from the backend when you start it, then chances are your DB is not running or the `.env` doesn't have the correct DB connection information. |
+| migrations | Run migration which checks for any migration scripts that have not yet been applied to the db and runs them. |Make sure you have a Postgres database running and the `.env` file is configured correctly. If you get connection errors from the backend when you start it, then chances are the DB is not running or the `.env` doesn't have the correct DB connection information. |
 | migrations:revert | Revert last successfully executed migration. | The same connection configuration is needed here as with the `migrations` script above. |
 | test | Run all unit tests. | |
 | build | Compiles the code. | Drops the compiled code in the `./dist` folder. |
-| start | Starts up the application locally. | Make sure you have a Postgres database running and your `.env` file is configured correctly. If you get connection errors from the backend when you start it, then chances are your DB is not running or the `.env` doesn't have the correct DB connection information.|
+| start | Starts up the application locally. | Make sure you have a Postgres database running and the `.env` file is configured correctly. If you get connection errors from the backend when you start it, then chances are the DB is not running or the `.env` doesn't have the correct DB connection information.|
 
 ### Examples:
 
@@ -140,8 +139,8 @@ Circle CI is only one of many options for CI/CD tools. It is a “software as a 
 
 1. [Create an account](https://circleci.com/signup/?source-button=free) with circleci.com if you haven't already. I recommend the free tier. It includes 2500 credits per week which equals around 70 builds. This should be enough as long as you are conservative with your builds. _If you run out of credits, you can create another account and continue working._
 2. Create a new project in Circle CI using your GitHub repo.
- - Notice the `.circleci` folder. This is where your jobs will go.
-3. Ensure a workflow starts with the jobs in your `.config` file. If you need to take a look at some samples, Circle CI was nice enough to [give us a few](https://circleci.com/docs/2.0/sample-config).
+ - Notice the `.circleci` folder. This is where jobs will go.
+3. Ensure a workflow starts with the jobs in the `.config` file. If you need to take a look at some samples, Circle CI was nice enough to [give us a few](https://circleci.com/docs/2.0/sample-config).
 
 ### To Do
 
@@ -149,7 +148,7 @@ Circle CI is only one of many options for CI/CD tools. It is a “software as a 
 
 #### 1. Build Phase
 
-The goal of a build phase is to compile or lint the source code to check for syntax errors or unintentional typos in code. It’s the first line of defense against bugs as we attempt to integrate the pieces of your project together.
+The goal of a build phase is to compile or lint the source code to check for syntax errors or unintentional typos in code. It’s the first line of defense against bugs as we attempt to integrate the pieces of the project together.
 
 - A job named `build-frontend` in the `.circleci/config.yml` file. 
 - Another job named `build-backend` in the `.circleci/config.yml` file. 
@@ -159,6 +158,7 @@ The goal of a build phase is to compile or lint the source code to check for syn
 ```
 - Throughout this project, there'll be separate jobs for the front-end and back-end so that failure alerts are more descriptive.
 - Jobs should fail if code cannot be compiled (fail for the right reasons), and **a failed build should stop all future jobs.** 
+
 ![Job properly failing because of compile errors.](screenshots/SCREENSHOT01.png)
 
 #### 2. Test Phase
@@ -166,8 +166,8 @@ The goal of a build phase is to compile or lint the source code to check for syn
 Unit tests are one of the many very important building blocks of a system that enables Continuous Delivery. So, if a test fails, it's because the code is no longer trustworthy. Only trustworthy code should get a ticket to continue the ride!
 
 - Create jobs named `test-frontend` and `test-backend` in the config file. 
-  - For both jobs, I use a Docker image that is compatible with NodeJS - `circleci/node:13.8.0`.
 - A unit test job should fail the job and prevent any future jobs from running.
+
 ![Job properly failing because of test failures.](screenshots/SCREENSHOT02.png)
 
 #### 3. Analyze Phase
@@ -180,7 +180,9 @@ Included is a job that checks for known vulnerabilities every time we check in n
 npm audit --audit-level=critical
 ```
 - Job should fail if any major vulnerabilities are found (fail for the right reasons).
+
 ![Job properly failing because of security vulnerabilities.](screenshots/SCREENSHOT03.png)
+
 - Fix the vulnerability using the command below and re-run the job.
 ```bash
 npm audit fix --audit-level=critical --force
@@ -193,16 +195,17 @@ When a build fails for any reason, an alert should be sent out. We’re going to
 
 - Integrate Slack, email or another communication tool to receive alerts when jobs fail. Our examples are using Slack, but you should feel free to use the communication tool to which you are most accustomed.
 - Alerts should include a summary of what happened and a link to the job console output for quick troubleshooting.
+
 ![An alert when the build breaks.](screenshots/SCREENSHOT04.png)
 
 ## Section 3 - Utilize a Configuration Management Tool to Accomplish Deployment to Cloud-Based Servers
 
-In this section, we'll be creating and configuring infrastructure before deploying code to it. This will be accomplished by preparing your AWS and CircleCI accounts just a bit, then by building Ansible Playbooks for use in your CircleCI configuration.
+In this section, we'll be creating and configuring infrastructure before deploying code to it. This will be accomplished by preparing your AWS and CircleCI accounts just a bit, then by building Ansible Playbooks for use in the CircleCI configuration.
 
 ### Setup
 
 #### AWS
-1. Create and download a new key pair in AWS for CircleCI to use to work with AWS resources. Name this key pair "udacity" so that it works with your Cloud Formation templates. [This tutorial may help](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-key-pairs.html#having-ec2-create-your-key-pair) (look for "Option 1: Create a key pair using Amazon EC2"). You'll be using this key pair (pem file) in future steps so keep it in a memorable location. 
+1. Create and download a new key pair in AWS for CircleCI to use to work with AWS resources. Name this key pair "udacity" so that it works with the CloudFormation templates. [This tutorial may help](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-key-pairs.html#having-ec2-create-your-key-pair) (look for "Option 1: Create a key pair using Amazon EC2"). We'll be using this key pair (pem file) in future steps so keep it in a memorable location. 
 2. Create IAM user for programmatic access only and copy the id and access keys. [This tutorial may help.](https://serverless-stack.com/chapters/create-an-iam-user.html) You'll need these keys if you want to try any AWS commands from your own command line. You'll also need these credentials to add to CircleCI configuration in the next steps.
 3. Add a PostgreSQL database in RDS that has **public accessibility**. Take note of the connection details (hostname, username, password). [This tutorial may help.](https://aws.amazon.com/getting-started/tutorials/create-connect-postgresql-db/) As long as you marked "Public Accessibility" as "yes", you won't need to worry about VPC settings or security groups.
 
@@ -211,18 +214,18 @@ In this section, we'll be creating and configuring infrastructure before deployi
 
 At the very end of the pipeline, we will need to make a switch from the old infrastructure to the new using the Blue Green Deployment strategy. We will use CloudFormation and CloudFront to accomplish this. However, for this to work, you must do a few things manually:
 
-1) Create an S3 Bucket with a unique name . If S3 complains that the name is already taken, append a random string to your chosen name. The random string is to distinguish your bucket from other buckets.
-2) Run the provided [Cloud Formation](https://github.com/udacity/cdond-c3-projectstarter/blob/master/.circleci/files/cloudfront.yml) template locally (for the Workflow ID parameter, use your bucket name).
+1) Create an S3 Bucket with a unique name by appending a random string to `udapeople-` (e.g. "udapeople-kk1j287dhjppmz437"). The random string is to distinguish the bucket.
+2) Run the provided [CloudFormation](https://github.com/udacity/cdond-c3-projectstarter/blob/master/.circleci/files/cloudfront.yml) template locally (for the Workflow ID parameter, use your randomm string).
 
 Once that is done, subsequent executions of that template will modify the same CloudFront distribution to make the blue-to-green switch without fail.
 
 #### Circle CI
 
-Please watch the [video walkthrough of setting up your secrets here](https://www.youtube.com/watch?v=caFJQ1YwVdU).
+Please watch the [video walkthrough of setting up secrets here](https://www.youtube.com/watch?v=caFJQ1YwVdU).
 
 1. Add SSH Key pair from EC2 as shown [here](https://circleci.com/docs/2.0/add-ssh-key/). To get the actual key pair, you'll need to open the pem file in a text editor and copy the contents. Then you can paste them into Circle CI.
 
-2. Add the following environment variables to your Circle CI project by navigating to {project name} > Settings > Environment Variables as shown [here](https://circleci.com/docs/2.0/settings/):
+2. Add the following environment variables to the Circle CI project by navigating to {project name} > Settings > Environment Variables as shown [here](https://circleci.com/docs/2.0/settings/):
   - `AWS_ACCESS_KEY_ID`=(from IAM user with programmatic access)
   - `AWS_SECRET_ACCESS_KEY`= (from IAM user with programmatic access)
   - `AWS_DEFAULT_REGION`=(your default region in aws)
@@ -246,20 +249,19 @@ In this phase, we will add CircleCI jobs that execute Cloud Formation templates 
 
 ##### Create/Deploy Infrastructure
 
-- Create a job named `deploy-infrastructure` in your config file
-  - Add code to create your infrastructure using [CloudFormation templates](https://github.com/udacity/cdond-c3-projectstarter/tree/master/.circleci/files). Again, provide a screenshot demonstrating an appropriate job failure (failing for the right reasons). **[SCREENSHOT05]**
-
+- Create a job named `deploy-infrastructure` in the config file
+  - Add code to create the infrastructure using [CloudFormation templates](https://github.com/udacity/cdond-c3-projectstarter/tree/master/.circleci/files). 
+  
 ![Job properly failing because of an error when creating infrastructure.](screenshots/SCREENSHOT05.png)
-
-  - Select a Docker image that supports the AWS CLI
-  - Create backend infrastructure by editing the step named `Ensure back-end infrastructure exists`. You'll notice you need to edit the `--tags`, `--stack-name`, and `--parameter-overrides` with your information. Make sure to remove each `#` to uncomment the lines after you've added your information.
-    - Use the workflow id to mark your CloudFormation stacks so that you can reference them later on (ex: rollback). If you'd like, you can use the parameterized CloudFormation templates we provided. 
-    - Programmatically create a new EC2 Instance for your back-end.
-    - Make sure the EC2 instance has your back-end port opened up to public traffic (default port 3030).
+  - Create backend infrastructure
+    - Use the workflow id to mark CloudFormation stacks so that they can be referenced later on (ex: rollback). If you'd like, you can use the parameterized CloudFormation templates we provided. 
+    - Programmatically create a new EC2 Instance for the back-end.
+    - Make sure the EC2 instance has the back-end port opened up to public traffic (default port 3030).
     - Programmatically save the new back-end url to memory or disk for later use (the front-end needs it). This could be done with [MemStash.io](https://memstash.io).
     - Tag the back-end infrastructure so that it can be referenced later.
-  - Create frontend by editing the step named `Ensure front-end infrastructure exist`. Again, add your information and remove the `#` to uncomment the appropriate lines.
-    - Use a CloudFormation template to create a new S3 Bucket for your front-end.
+    
+  - Create frontend by editing the step named `Ensure front-end infrastructure exist`.
+    - Use a CloudFormation template to create a new S3 Bucket for the front-end.
     - Use the workflow id to mark the front-end infrastructure so that you can reference it easily later on.
     - Tag the front-end infrastructure so that it can be referenced later.
   - Generate an inventory file for use with Ansible by using AWS CLI to append the newly created backend IP to the [provided](https://github.com/udacity/cdond-c3-projectstarter/blob/master/.circleci/ansible/inventory.txt) inventory file.
@@ -267,9 +269,8 @@ In this phase, we will add CircleCI jobs that execute Cloud Formation templates 
   
 ##### Configure Infrastructure
 
-- Find the job named `configure-infrastructure` in the config file.
+- Create a job named `configure-infrastructure` in the config file.
   - Write code to set up the EC2 intance to run as our back-end.
-    - Select a Docker image that supports Ansible.
     - Add the SSH key fingerprint to job so that Ansible will have access to the EC2 instance via SSH.
     - Attach the "workspace" to the job so that you have access to all the files you need (e.g. inventory file).
     - Create an Ansible playbook named `configure-server.yml` in the `.circleci/ansible` folder to set up the backend server. Remember that you are running this Playbook against an EC2 instance that has been programmatically created (inside the CircleCI job). 
@@ -311,7 +312,7 @@ Now that the infrastructure is up and running, it’s time to configure for depe
     - Add the url of the newly created back-end server to the `API_URL` environment variable. This is important to be done before building the front-end in the next step because the build process will take the `API_URL` from the environment and "bake it" (hard-code it) into the front-end code.
       - In a previous job, you created the back-end infrastructure and saved the IP address of the new EC2 instance. This is the IP address you will want to pull out and use here. If the IP address is "1.2.3.4", then the `API_URL` should be `https://1.2.3.4:3000`.
     - Run `npm run build` one last time so that the back-end url gets "baked" into the front-end. 
-    - Copy the files to your new S3 Bucket using AWS CLI (compiled front-end files can be found in a folder called `./dist`).
+    - Copy the files to the new S3 Bucket using AWS CLI (compiled front-end files can be found in a folder called `./dist`).
 
 ##### Deploy Back-end
 
@@ -325,7 +326,7 @@ Now that the infrastructure is up and running, it’s time to configure for depe
 #### 3. Smoke Test Phase
 
 Create a smoke test to remove ensure that nothing we didn’t plan for that made it through to production
-- Create a job named `smoke-test` in your config file.
+- Create a job named `smoke-test` in the config file.
   - Write code to make a simple test on both front-end and back-end. Use the suggested tests below or come up with your own. 
     - Install dependencies like `curl`.
     - Test the back-end
@@ -349,7 +350,7 @@ Create a smoke test to remove ensure that nothing we didn’t plan for that made
 
 #### 4. Rollback Phase
 
-If the smoke test fails, create a job that rolls back to previous working infrastructure.
+If the smoke test fails, create a job that rolls back to previously working infrastructure.
 
 - At the top of the config file, create a “[command](https://circleci.com/docs/2.0/reusing-config/#authoring-reusable-commands)” named `destroy-environment` to remove infrastructure if something goes wrong
   - Trigger rollback jobs if the smoke tests or any following jobs fail. 
@@ -371,20 +372,23 @@ Assuming the smoke test came back clean, we would have a relatively high level o
 - Create a job named `cloudfront-update` in the config file.
   - Create code that promotes our new front-end to production.
     - Install any needed dependencies
-    - Use a [CloudFormation template](https://github.com/udacity/cdond-c3-projectstarter/tree/master/.circleci/files) to change the origin of your CloudFront distribution to the new S3 bucket.
+    - Use a [CloudFormation template](https://github.com/udacity/cdond-c3-projectstarter/tree/master/.circleci/files) to change the origin of the CloudFront distribution to the new S3 bucket.
 
 ![Successful promotion job.](screenshots/SCREENSHOT08.png)
 
 - Public URL for CloudFront distribution (aka, production front-end).
+
 ![Successful rollback job.](screenshots/URL03_SCREENSHOT.png)
+
 - Public URL for back-end server in EC2. 
+
 ![Successful rollback job.](screenshots/URL04_SCREENSHOT.png)
 
 #### 6. Cleanup Phase
 
-The UdaPeople finance department likes it when your AWS bills are more or less the same as last month OR trending downward. But, what if all this “Blue-Green” is leaving behind a trail of dead-end production environments? That upward trend probably means no Christmas bonus for the dev team. Let’s make sure everyone at UdaPeople has a Merry Christmas by adding a job to clean up old stacks.
+Clean up old stacks after switching from blue to green deployments.
 
-- Find the job named `cleanup` in your config file.
+- Create a job named `cleanup` in the config file.
   - Write code that deletes the previous S3 bucket and EC2 instance. 
     - Query CloudFormation to find out the old stack's workflow id like this:
     ```
@@ -398,16 +402,42 @@ The UdaPeople finance department likes it when your AWS bills are more or less t
       - Back-end stack (example: `aws cloudformation delete-stack --stack-name "udapeople-backend-${OldWorkflowID}"`)
       - Front-end files in S3 (example: `aws s3 rm "s3://udapeople-${OldWorkflowID}" --recursive`)
       - Front-end stack
-- Provide a screenshot of the successful job. **[SCREENSHOT09]**
 
-![Successful cleanup job.](screenshots/SCREENSHOT09.png)
+![Successful cleanup job.](screenshots/SCREENSHOT09.PNG)
 
-#### Other Considerations
+## Section 4 - Surface Critical Server Errors for Diagnosis Using Centralized Logging
 
-- Make sure you only run deployment-related jobs on commits to the `master` branch. Provide screenshot of a build triggered by a non-master commit. It should only run the jobs prior to deployment. **[SCREENSHOT10]**
+We use Prometheus as a monitoring solution since it is open-source and versatile. Once configured properly, Prometheus will turn the server’s errors into sirens that no one can ignore.  
 
-![Deploy jobs only run on master](screenshots/SCREENSHOT10.png)
+### Setup
 
+Please watch the [video walkthrough of how to set up an EC2 instance and Prometheus here](https://www.youtube.com/watch?v=PSXrbE54FqQ).
+
+- Manually create an EC2 instance and SSH into it.
+- Set up Prometheus Server on EC2 following [these instructions](https://codewizardly.com/prometheus-on-aws-ec2-part1/).
+- Configure Prometheus for AWS Service Discovery following [these instructions](https://codewizardly.com/prometheus-on-aws-ec2-part3/).
+
+#### 1. Setup Back-End Monitoring
+
+In order for server instances to speak to Prometheus, we'll install an “exporter” in each one.  
+
+- Create a job that uses Ansible to go into the EC2 instance and install the exporter.
+  - Add a section to the back-end configuration job to install the `node_exporter` for Prometheus monitoring. This should be done using Ansible. Your playbook can simulate the steps in [this tutorial](https://codewizardly.com/prometheus-on-aws-ec2-part2/). 
+  - After deploy, ensure the back-end is being discovered by the Prometheus Server.
+
+![Graphs of CPU, Disk and Memory utilization on systems being monitored.](screenshots/SCREENSHOT11-2.png)
+
+![Set up Prometheus Server](screenshots/URL05_SCREENSHOT.PNG)
+
+#### 2. Setup Alerts
+
+Now that Prometheus and the EC2 instance have an open line of communication, we set up some alerts. I'll configure an email alert service.
+
+- SSH into the Prometheus Server.
+- Install and configure AlertManager by following [these instructions](https://codewizardly.com/prometheus-on-aws-ec2-part4/).
+- To test - set up an alert for low memory or some condition you can control to intentionally cause an alert.
+
+![Alerts from a failing system that is being monitored.](screenshots/SCREENSHOT12.PNG)
 
 ### License
 
