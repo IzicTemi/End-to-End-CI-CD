@@ -193,7 +193,7 @@ npm audit fix --audit-level=critical --force
 
 When a build fails for any reason, an alert should be sent out. We’re going to add an alert so that botched builds raise a nice wavy red flag.
 
-- Integrate Slack, email or another communication tool to receive alerts when jobs fail. Our examples are using Slack, but you should feel free to use the communication tool to which you are most accustomed.
+- I'll be integrating an email alert with the project.
 - Alerts should include a summary of what happened and a link to the job console output for quick troubleshooting.
 
 ![An alert when the build breaks.](screenshots/SCREENSHOT04.png)
